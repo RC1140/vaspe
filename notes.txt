@@ -1,5 +1,6 @@
-0000000 6765 6d76 6962 616e 7972 0000 0000 0000
+Hexdump helloworld :  file length 256 bytes
 
+0000000 6765 6d76 6962 616e 7972 0000 0000 0000
 0000010 6012 010b 010b 010b 010b 010b 010b 010b
 0000020 010b 010b 010b 010b 010b 010b 010b 010b
 0000030 000b 0000 0000 0000 0000 0000 0000 0000
@@ -7,6 +8,24 @@
 0000050 0a00 3a29 2120 6c64 6f72 2057 6c6f 656c
 0000060 0048 0000 0000 0000 0000 0000 0000 0000
 0000070 0000 0000 0000 0000 0000 0000 0000 0000
+
+-------------------------------------------
+
+./EvilGroupVM helloworld 
+
+Output : 
+
+Header matched. The binary is being loaded to runtime memory
+and thread context will be initialized
+
+Instruction pointer initialized to offset 0x12 and value 0xb
+Stack pointer initialized to offest 0x60 and value 0x48
+
+Thread context initialized, execution begins
+
+Hello World! :)
+
+---------------------------------------------
 
 File needs to be at least 256 bytes
 
