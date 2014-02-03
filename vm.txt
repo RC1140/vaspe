@@ -212,16 +212,16 @@ Disassembly of section .text:
   400867:	ba 0f 00 00 00       	mov    $0xf,%edx
   40086c:	48 89 c6             	mov    %rax,%rsi
   40086f:	bf a0 20 60 00       	mov    $0x6020a0,%edi
-  400874:	e8 a7 fd ff ff       	callq  400620 <strncmp@plt>
-  400879:	85 c0                	test   %eax,%eax
+  400874:	e8 a7 fd ff ff       	callq  400620 <strncmp@plt>                                     -- checked if the first 0xf bytes match some string we have stored , this is probably the header check.
+  400879:	85 c0                	test   %eax,%eax                                                -- if they match then go to init , otherwise print an error message and exit
   40087b:	74 14                	je     400891 <main+0xed>
   40087d:	bf b0 0e 40 00       	mov    $0x400eb0,%edi
   400882:	e8 a9 fd ff ff       	callq  400630 <puts@plt>
   400887:	bf 00 00 00 00       	mov    $0x0,%edi
   40088c:	e8 1f fe ff ff       	callq  4006b0 <exit@plt>
-  400891:	bf f0 0e 40 00       	mov    $0x400ef0,%edi
+  400891:	bf f0 0e 40 00       	mov    $0x400ef0,%edi                                           --Print some value and then start the thread init
   400896:	e8 95 fd ff ff       	callq  400630 <puts@plt>
-  40089b:	e8 43 00 00 00       	callq  4008e3 <initialize_thread>
+  40089b:	e8 43 00 00 00       	callq  4008e3 <initialize_thread>                               -- Call the thread init , will return here with more info once that code is documented
   4008a0:	48 89 c1             	mov    %rax,%rcx
   4008a3:	89 d0                	mov    %edx,%eax
   4008a5:	48 89 4d a0          	mov    %rcx,-0x60(%rbp)
@@ -246,14 +246,14 @@ Disassembly of section .text:
 00000000004008e3 <initialize_thread>:
   4008e3:	55                   	push   %rbp
   4008e4:	48 89 e5             	mov    %rsp,%rbp
-  4008e7:	48 83 ec 30          	sub    $0x30,%rsp
-  4008eb:	48 c7 45 e0 a0 20 60 	movq   $0x6020a0,-0x20(%rbp)
+  4008e7:	48 83 ec 30          	sub    $0x30,%rsp                                   -- setup 0x30 bytes of mem on the stack
+  4008eb:	48 c7 45 e0 a0 20 60 	movq   $0x6020a0,-0x20(%rbp)                        -- move the location of some string location onto the stack.
   4008f2:	00 
   4008f3:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
   4008f7:	48 83 c0 10          	add    $0x10,%rax
-  4008fb:	0f b6 00             	movzbl (%rax),%eax
+  4008fb:	0f b6 00             	movzbl (%rax),%eax                                  -- Move the long value @ rax to eax and compare it to 0x10/16
   4008fe:	3c 10                	cmp    $0x10,%al
-  400900:	76 4e                	jbe    400950 <initialize_thread+0x6d>
+  400900:	76 4e                	jbe    400950 <initialize_thread+0x6d>              -- jump if the value in al is less than or equal to 0x10
   400902:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
   400906:	0f b6 40 10          	movzbl 0x10(%rax),%eax
   40090a:	88 45 e8             	mov    %al,-0x18(%rbp)
@@ -276,10 +276,10 @@ Disassembly of section .text:
   400947:	3c 4f                	cmp    $0x4f,%al
   400949:	77 19                	ja     400964 <initialize_thread+0x81>
   40094b:	e9 80 00 00 00       	jmpq   4009d0 <initialize_thread+0xed>
-  400950:	bf b8 0f 40 00       	mov    $0x400fb8,%edi
+  400950:	bf b8 0f 40 00       	mov    $0x400fb8,%edi                               -- go here if the al register is less than 0x10 and print an error message before exiting
   400955:	e8 d6 fc ff ff       	callq  400630 <puts@plt>
   40095a:	bf 01 00 00 00       	mov    $0x1,%edi
-  40095f:	e8 4c fd ff ff       	callq  4006b0 <exit@plt>
+  40095f:	e8 4c fd ff ff       	callq  4006b0 <exit@plt>                            -- something went wrong exit
   400964:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
   400968:	0f b6 40 11          	movzbl 0x11(%rax),%eax
   40096c:	88 45 e9             	mov    %al,-0x17(%rbp)
