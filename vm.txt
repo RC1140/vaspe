@@ -178,30 +178,30 @@ Disassembly of section .text:
   4007d5:	48 89 c7             	mov    %rax,%rdi
   4007d8:	e8 c3 fe ff ff       	callq  4006a0 <fopen@plt>
   4007dd:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
-  4007e1:	48 83 7d d0 00       	cmpq   $0x0,-0x30(%rbp)
-  4007e6:	75 0a                	jne    4007f2 <main+0x4e>
+  4007e1:	48 83 7d d0 00       	cmpq   $0x0,-0x30(%rbp)                                         -- CHeck if we managed to open a file , if not jump to 4007f2
+  4007e6:	75 0a                	jne    4007f2 <main+0x4e>                                       
   4007e8:	bf 93 0e 40 00       	mov    $0x400e93,%edi
-  4007ed:	e8 3e fe ff ff       	callq  400630 <puts@plt>
+  4007ed:	e8 3e fe ff ff       	callq  400630 <puts@plt>                                        -- if we cant open he file , then print a message 
   4007f2:	c7 45 dc 00 00 00 00 	movl   $0x0,-0x24(%rbp)
-  4007f9:	eb 04                	jmp    4007ff <main+0x5b>
+  4007f9:	eb 04                	jmp    4007ff <main+0x5b>                                       
   4007fb:	83 45 dc 01          	addl   $0x1,-0x24(%rbp)
   4007ff:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
   400803:	48 89 c7             	mov    %rax,%rdi
-  400806:	e8 75 fe ff ff       	callq  400680 <fgetc@plt>
-  40080b:	83 f8 ff             	cmp    $0xffffffff,%eax
-  40080e:	74 09                	je     400819 <main+0x75>
+  400806:	e8 75 fe ff ff       	callq  400680 <fgetc@plt>                                       -- and then attempt to blindly read the file even if it couldnt open the stream previously
+  40080b:	83 f8 ff             	cmp    $0xffffffff,%eax                                         -- compare the returned value to max int (EOF marker)
+  40080e:	74 09                	je     400819 <main+0x75>                                       -- if this is the end of the file , then perform a rewind of the stream and continue
   400810:	81 7d dc ff 00 00 00 	cmpl   $0xff,-0x24(%rbp)
-  400817:	7e e2                	jle    4007fb <main+0x57>
+  400817:	7e e2                	jle    4007fb <main+0x57>                                       -- Keep on reading data while that value is less than or equal to ( ff , 255)
   400819:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
   40081d:	48 89 c7             	mov    %rax,%rdi
-  400820:	e8 4b fe ff ff       	callq  400670 <rewind@plt>
+  400820:	e8 4b fe ff ff       	callq  400670 <rewind@plt>                                      --- resets file seeking for possible reading later  , the loop above is either a for loop or do while to read data from the file and validate that its not 0xff ? weird.
   400825:	b8 a0 20 60 00       	mov    $0x6020a0,%eax
   40082a:	48 8b 55 d0          	mov    -0x30(%rbp),%rdx
   40082e:	48 89 d1             	mov    %rdx,%rcx
   400831:	ba 00 01 00 00       	mov    $0x100,%edx
   400836:	be 01 00 00 00       	mov    $0x1,%esi
   40083b:	48 89 c7             	mov    %rax,%rdi
-  40083e:	e8 fd fd ff ff       	callq  400640 <fread@plt>
+  40083e:	e8 fd fd ff ff       	callq  400640 <fread@plt>                                       --- read 0x100 bytes of a file into the memory location 0x6020a0
   400843:	48 8b 05 11 07 00 00 	mov    0x711(%rip),%rax        # 400f5b <_IO_stdin_used+0xd3>
   40084a:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   40084e:	48 8b 05 0e 07 00 00 	mov    0x70e(%rip),%rax        # 400f63 <_IO_stdin_used+0xdb>
