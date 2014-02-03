@@ -160,7 +160,7 @@ Disassembly of section .text:
   4007a2:	90                   	nop
   4007a3:	90                   	nop
 
-00000000004007a4 <main>:
+00000000004007a4 <main>:                                                                                        -- C main function
   4007a4:	55                   	push   %rbp
   4007a5:	48 89 e5             	mov    %rsp,%rbp
   4007a8:	48 83 ec 60          	sub    $0x60,%rsp
